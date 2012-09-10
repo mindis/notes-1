@@ -1,0 +1,51 @@
+* Screen command
+
+** screenrc
+example screen rc file
+
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=
+kw}%?%-Lw%?%{r}(%{W}%n*%f %t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}
+%Y-%m-%d %{W}%c %{g}]‘
+# Default screens
+screen -t shell1	0
+screen -t shell2	1
+screen -t server	2 	sh me@myserver
+screen -t IRC	7	irssi
+screen -t Mail	8	mutt
+
+** invocation
+-R : reattach to first detached session or create a new session.
+-c <>  : different configuration file.
+-d <session> : dittach a session
+-ls : list session on the systems.
+scree [options] <command> : start a scree and run the command in it.
+
+** Key bindings
+|------------------+-----------------------|
+| GLOBAL           |                       |
+| C-a C-g          | toggle visutal bell   |
+| C-a ?            | help                  |
+| C-a _            | Monitor for sileance  |
+| C-a M            | Monitor for change    |
+|------------------+-----------------------|
+| WINDOW           |                       |
+| C-a c            | Create a new window   |
+| C-a A            | Change the title      |
+| C-a #n           | Switch to window #n   |
+| C-a K            | Kill a window         |
+| C-a SPACE, C-a n | Switch to next window |
+| C-a p            | Previous window       |
+| C-a C-a          | next-previous cycle   |
+|------------------+-----------------------|
+| REGION           |                       |
+| C-a S            | Create a new region   |
+| C-a TAB          | Switch to new Region  |
+| C-a X            | Kill current region   |
+|------------------+-----------------------|
+
+* tmux is alternative to scree, which has same functionality
+  (I also found that it is more buggy than scree, but it works most of the time)
+
+
+

@@ -1,0 +1,49 @@
+* Java langugage
+
+* Basic Type
+* Enumerations
+* Interface
+* abstract class
+  can contain member variables, but some methods do not have implementation.
+  these calsses can not instantiated.
+
+** Nested class
+*** Iner class
+    This class have referece to the public and private class members in the
+    enclosing class.
+*** static inner class
+    It is same as the different class defined elsewhere, it does not have
+    access to the enclosing class private and public members. It can not
+    access the public members of enclosing class without the object reference.
+    Static class it a separeate class, just for convenience enclosed.
+
+** Assess levels
+|-----------+-------+----------+---------+--------|
+| type      | class | subclass | package | public |
+|-----------+-------+----------+---------+--------|
+| public    | yes   | yes      | yes     | yes    |
+| private   | yes   | no       | no      | no     |
+| protected | yes   | yes      | no      | no     |
+| default   | yes   | yes      | yes     | no     |
+|-----------+-------+----------+---------+--------|
+
+*** A final method can not be overridden by the subclass.
+    Methods called from constructor of the object normally should be defined
+    as final, else subclass can override then causing some unexplain problems.
+*** when a class is defined as final it can not be subclassed.
+*** 
+** Interfaces
+*** Ineterface contain only method definitions and not the implementations.
+*** An Interface can extend other interfaces.
+*** Any variable defined in interface is considered as static and final
+    a constant.
+*** All methos in interface is by default public.
+
+** Anotations
+*** @Override
+    If you want to override a method from superclass you can annotate the method
+    with override. If compiler fails to find a method in superclass which
+    signature matches with the method you are trying to override, you will get
+    an compile error.
+
+

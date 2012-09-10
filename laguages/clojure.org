@@ -1,0 +1,12 @@
+* Doing I/O in clojure
+
+#+BEGIN_SRC clojure
+(defn fetch-url[address]
+  (with-open [stream (.openStream (java.net.URL. address))]
+    (let  [buf (java.io.BufferedReader. 
+                (java.io.InputStreamReader. stream))]
+      (apply str (line-seq buf)))))
+
+(fetch-url "http://google.com")
+#+END_SRC 
+

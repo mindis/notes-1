@@ -1,0 +1,70 @@
+* operation table
+  |------------+-------------+-------------+---------------|
+  | operation  | input type  | return type | note          |
+  |------------+-------------+-------------+---------------|
+  | NULL       | void        | voud        |               |
+  | GETATTR    | fhandle     | attrstat    |               |
+  | SETATTR    | [[sattrargs]]   | attrstat    |               |
+  | ROOT       | void        | void        | not used      |
+  | LOOKUP     | diropargs   | diropres    |               |
+  | READLINK   | fhandle     | readlinkres |               |
+  | READ       | readargs    | readres     | attr returned |
+  | WRITECACHE | void        | void        | not used      |
+  | WRITE      | writeargs   | attrstat    | attr returned |
+  | CREATE     | creatargs   | diropres    | attr returned |
+  | REMOVE     | diropargs   | stat        |               |
+  | RENAME     | renameargs  | stat        |               |
+  | LINK       | linkargs    | stat        |               |
+  | SYMLINK    | symlinkargs | stat        |               |
+  | MKDIR      | createargs  | diropres    | attr returned |
+  | RMDIR      | diropargs   | stat        |               |
+  | READDIR    | readdirargs | readdirres  |               |
+  | STATFS     | fhandle     | statfsres   |               |
+  |------------+-------------+-------------+---------------|
+
+
+** sattrargs
+   struct sattrargs {
+     fhandle file;
+     [[sattr]] attributes;
+   }
+
+** struct [[sattr]] {
+     unsigned int mode;
+     unsigned int uid;
+     unsigned int gid;
+     unsigned int size;
+     timeval  atime;
+     timeval  mtime;
+   }
+
+** struct fattr {
+       ftype        type;                                            
+       unsigned int mode;                                            
+       unsigned int nlink;                                           
+       unsigned int uid;                                             
+       unsigned int gid;                                             
+       unsigned int size;                                            
+       unsigned int blocksize;                                       
+       unsigned int rdev;                                            
+       unsigned int blocks;                                          
+       unsigned int fsid;                                            
+       unsigned int fileid;                                          
+       timeval      atime;                                           
+       timeval      mtime;                                           
+       timeval      ctime;                                           
+     };       
+
+** struct diropargs {
+     fhandle  dir;                                                 
+     filename name;                                                
+   };
+** union diropres switch (stat status) {
+     case NFS_OK:                                                      
+       struct {                                                      
+                fhandle file;                                             
+                fattr   attributes;                                       
+              } diropok;                                                    
+       default:                                                          
+         void;                                                         
+    };      

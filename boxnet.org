@@ -1,0 +1,21 @@
+Accessing box.net filesytem from linux
+
+* install davfs2 using yum or apt-get
+
+  yum install davfs2
+
+* Change /etc/davfs2/secrets file and add use credential to it
+
+  https://www.box.com/dav user@email.com password
+
+  No need to enter it in this file, if you are going to manually mount,
+  At the mount time it will ask for the information.
+
+* Edit the /etc/davfs2/davfs2.conf
+Change:
+# use_locks 1
+to
+use_locks 0
+
+* mount the davfs filesystem in the user tree
+  mount -t davfs  https://www.box.com/dav /mount_point

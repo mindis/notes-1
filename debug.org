@@ -1,0 +1,322 @@
+* Linux
+** Configuring diskdump on Linux system
+
+2) Setup instructions
+   1) Install diskdump (rpm -ivh diskdumputils)
+   2) modprobe diskdump
+   3) Edit /etc/sysconfig/diskdump file with detail of disk partition to be used for diskdump.
+   Suppose if you want to use first partion of sde then set DEVICE to /dev/sde1
+   Make sure that sde1 have enough space to hold the diskdump.
+   DEVICE=/dev/sde1
+   4) Run 'service diskdump initialformat' command to format the configured device.
+   
+   And finally, add the service to run on startup and then start the service
+     # chkconfig diskdump on
+     # service diskdump start
+
+After system panic you can run 'savecore -v /dev/<diskdump_disk> to save core to /var/crash directory. To automatically
+generate diskdump file add 'this command in /etc/rc.local file.
+
+After dump is generated you can debug it using crash or gdb.
+
+** Configuring system-tap on system
+1) Install kernel debuginfo packages
+2) Install systemtap rpms from the distribution repository.
+
+** GDB
+1) To view structure definition use >ptype struct <name> command.
+2) To load an object file with debugging information use >add-symbol-file command.
+3) To see which types definitions are available use >info types command, or >info type <name>
+
+** Crash Tool 
+*** starting crash debugger
+$ crash -S /boot/System.map-<kernel version> <location where debuginfo kernel is installed>
+
+The debuginfo kernel is mostly located at : /usr/lib/debug/boot/vmlinux on SLES
+and /usr/lib/debug/lib/modules/2.6.9-67.ELsmp/vmlinux on RHEL platform.
+*** To view system informaiton at time of crash
+> sys
+*** To collect stack trace of all running threads
+> foreach bt
+*** To diassemble a function
+> dis <function_nae>
+*** To print data structure
+crash can print data structures in same format as gdb. To view data structures we will need to
+provide object file which have debugging information. You can get kernel modules from
+nightly build area which contains debuginfo file.
+
+> add-symbol-file <location of driver.ko file with debug info>
+
+> print <struct name> <address>
+
+*** To traverse link list
+crash can traverse link list data structure. To traverse a link list we need to
+provide starting address, the structure type and offset of next field or name of
+next field.
+
+Example :
+list -o {offset} {start address}
+
+*** To view syslog messages
+> dmesg
+
+** Misc commands
+*** Setting up serial console
+Modify the /boot/grub/menu.lst file to set the serial tty as console:
+
+For Red Hat, remove the “rhgb” and “quiet” tags and append “console=ttyS1,57600 console”
+For SuSE, remove the “splash=silent” tag and append “console=ttyS1,57600 console=tty1”
+
+f)Add ttyS1 into securetty
+
+#echo "ttyS1" >>/etc/securetty 
+
+To enable loging from serial console add following entry in /etc/inittab file at the end.
+s0:2345:respawn:/sbin/agetty -L -f /etc/issueserial 57600 ttyS1 vt100
+
+The above description is for adding support for new console port ttyS1
+
+* HP-UX
+** Performance tool
+*** Caliper tool
+[[http://h20392.www2.hp.com/portal/swdepot/displayProductInfo.do?productNumber=CALIPEREVAL
+   ][caliper
+]]
+*** Running ktracer 
+Set the number of per cpu trace entries using
+$ ktracer -A <num entries>, The default entries are 2048
+
+Clear/Free previos trace entries using 
+$ ktracer -Z (clear)
+$ ktracer -f (free)
+
+Start tracing
+$ ktracer -b
+
+Stop tracing
+$ ktracer -h
+
+Remove a specific function from ktracer list
+$ ktracer -r <function name>
+
+Remove all functions from ktracer list
+$ ktracer -z
+
+Add a function to trace list
+$ ktracer -a <function name>
+
+Trace for a specific duration
+$ ktracer -g <seconds>
+
+Trace only single process
+$ ktracer -p <pid>
+
+To see all traceble functions
+$ ktracer -R -DNF > filename
+
+* Solaris
+** Tools and packages
+*** TODO  Sunstudio compiler and tools
+*** Downloading opensolaris source and build tools
+The open solaris source and build tools are available at
+http://dlc.sun.com/osol/on/downloads/current/
+
+The detailed steps to build opensolaris can be found at
+http://www.blastwave.org/articles/BLS-0050/index.html
+
+*** SUNwonbld package
+
+This package is required for ctfconvert and cftmerge commands, the recent build for this package 
+is available at http://dlc.sun.com/osol/scm/SUNWonbld/
+
+The cftconvert and ctfmerge binaries will be installed at
+/opt/onbld/bin/<arch>/
+*** Easy opensource package installation for solaris 10
+
+Install pkg-get software 
+# pkgadd -d http://www.opencsw.org/pkg_get.pkg 
+
+The pkg-get binary will installed in /opt/csw/bin/
+
+Then to install any sotfware available on http://www.opencsw.org/, you can use
+# /opt/csw/bin/pkg-get install <package name>
+
+Example, To install emacs editor use
+
+# /opt/csw/bin/pkg-get install emacs
+*** Installation of gdb and gcc on solaris
+using pkg-get command
+# /opt/csw/bin/pkg-get install gdb
+# /opt/csw/bin/pkg-get install gcc
+
+** MDB
+*** starting mdb
+To examine live system state
+# mdb -k
+
+To examine core dump
+# mdb -k *.<number>
+or
+# mdb -k ./vmunix ./core
+*** To view panic stack
+> ::stack
+*** To view all supported commands
+> ::dcmds
+*** To view message buffer
+> $<msgbuf
+*** To view stack of all threads running in system
+> $<threadlist
+or
+> ::threadlist
+
+*** To get contenet of memory at address <addr>
+> <addr>/<count><type>
+count is a how many items we want to print and type if one of below
+
+| Type Char | Type                                                           |
+| c         | printable character value                                      |
+| C         | printable character value, or hex,octal representation of char |
+| s         | string whose first character start at address <addr>           |
+| Y         | Time                                                           |
+| x         | Short int in hex                                               |
+| X         | int value in hex                                               |
+| J         | long value in hex                                              |
+| d         | signed short  value                                            |
+| D         | singed int value                                               |
+| u         | unsigned short value                                           |
+| U         | unsigned short value                                           |
+*** To print a structure info
+mdb can read debug information in CTF format. To generate CTF format you will need to use
+ctfconvert  and ctfmerge command.
+
+To view a structure starting at address <addr>
+> <add>::print struct <struct name>
+
+If address is not specified then print command prints the members of structure 
+To get more informaiton use 
+> ::help print
+*** To get time information
+Current system time
+> *time=Y
+                2010 Jun  3 14:37:10
+
+Boot system time
+> *boot_time=Y
+                2010 Jun  3 13:08:43
+
+Panic system time
+
+
+ 
+** Debugging tips
+*** setting up kmem debug flag
+* AIX
+** kdb
+*** starting kdb
+*** to view system state
+> stat
+*** To view stack of a thread
+> f <thread id>
+Thread id of a proces can be read from "th *" command.
+*** To display basic data
+| command | Info                                        |
+| d       | dump display byte data symb/eaddr [count]   |
+| dw      | display word data symb/eaddr [count]        |
+| dd      | display double word data symb/eaddr [count] |
+| dp      | display byte data phys. addr [count]        |
+| dpw     | display word data phys. addr [count]        |
+| dpd     | display double word data phys. addr [count] |
+| dc      | dis display code symb/eaddr [count]         |
+| dpc     | display code phys. addr [count]             |
+| di      | decode decode the given instr hex-instr     |
+| dr      | display registers [gp, sr, sp, fp, name]    |
+
+*** To view status of each CPU at time of panic
+To get status of system at the time of panic
+(0)> status
+CPU TID TSLOT PID PSLOT PROC_NAME
+0 2005 2 2004 2 wait
+1 E01D 14 C018 12 wait
+2 17F02D 383 93094 147 kdb_64
+3 11023 17 E01C 14 wait
+4-63 Disabled
+This command will give you information about what processes were running
+at each cup at the time of panic.
+
+*** To view system messages from core
+> errpt
+*** To view loaded kernel modules
+> lke
+
+
+** Link for AIX commands
+http://www.ibm.com/developerworks/aix/library/au-dutta_cmds.html
+
+** Filesystem admin
+   lsfs
+   chfs
+   1. Increasing file system size
+      chfs
+      example
+      chfs -a size=+20971525 /file/system/name
+** System dump
+   1. Systemdump information
+      sysdumpdev
+
+* VirtualBox
+** Serial console
+Go into serial port tab and add a serial port with following settings.
+
+Check : Enable serial port
+Port No : COM1
+Port Mode : Host Pipe
+Check create pipe checkbox 
+Port/File path : /tmp/serial_port1 (or any other name you want)
+
+Now download socat utility (Should be available as package for your distro or you can compile it
+yourself by downloading it from [[www.dest-unreach.org/socat/][socat]]
+
+Use following function to create a screen session and connet to it.
+function create_screen() {
+     socat UNIX-CONNECT:$1 PTY,link=$1.screen &
+     # Attach to session using screen command.
+      screen $1.screen
+}
+
+Make sure to start virtual machine before running above command.
+
+** Host only networking
+Enable a new network adapter with following settings.
+Enable Adapter
+Host Only Networking
+
+Start virtual box and set i/p address of new system as
+IP Address : 192.168.56.10
+Mask as    : 255.255.255.0
+
+Now you can connect from the host to the virtual machine using ssh 192.168.56.10.
+
+I am not sure why any IP address does not work only IP address with 192.168.56.* format
+works.
+
+** Port forwarding for ssh connections.
+
+from guest OS execute following command
+# ssh -R 2222:localhost:22 <username>@<host>
+
+Now you can open an ssh connection to the guest from any server using
+# ssh root@<host> -p 2222
+
+How does it work, The first command create an tunnel from host to the virtual box guess.
+It forwards any trafic on port 2222 of host to the port 22 on virtualbox guest. Any other
+server connecting to port 2222 of host will connect to port 22 of virtualbox guest.
+
+** Commands
+List virtual machines created in the system.
+# VBoxManage list vms
+
+List running virtual machines
+# VBoxManage list runningvms
+
+Start a virtual machine without GUI
+# VBoxManage startvm --type headless

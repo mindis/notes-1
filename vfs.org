@@ -1,0 +1,37 @@
+* Linux
+
+** SuperBlock
+   Represent a mounted filesystem. It is allocated at time of mounting of the
+   filesytem. The filesystem must fill this sturcture and set the super_operation
+   field to the filesystem specific functions.
+
+   specific implementation of the functions.
+
+   super_operations 
+   struct inode *alloc_inode(*sb)
+   void destroy_inode(struct inode *, int)
+   void drop_inode(struct inode *)
+   void dirty_inode
+   int write_inode 
+   sync_fs
+   freeze_fs
+   unfreeze_fs
+   statfs
+   remount_fs
+   clear_inode
+   umount_begin
+
+   show_options
+   quota_read
+   quota_write
+
+   
+** Inode
+   contains the vfs_inode sturcture. important 
+   inode_operatiosn = 
+   
+   
+** File
+** DirectoryEntry
+
+* BSD/Solaris style

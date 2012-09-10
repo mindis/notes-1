@@ -1,0 +1,107 @@
+ Disk structures
+** Block management
+   BFS usage the bitmap approrach for simplicity, BFS keeps bitmap starting at
+   block 1. block 0 is reserved for superblock. while formatting the filesystem
+   space for block 0 and size of bitmap is already reserved in bitmap. i.e first
+   few bits of the bitmap is set.
+   
+   Allocation Group
+   each allocation group is simply some numbers of blocks. Number of blocks in allocation
+   group is multiple of number of blocks represented by bitmap block. Suppose we have 1G
+   disk formatted with 1K block size
+     num_blocks = 1G/1K = 128K
+     bitmap_blocks = 128K/1K = 128
+     each bitmap block can track  1K * 8 = 8K blocks.
+   so 8K blocks per allocation group normally with above configuration.
+ 
+** BlockRun
+   int32 allocation_group;
+   uint16 start;
+   uint16 len;
+   
+   2^16 entries per blockrun. and offset can be 2^16 which keeps the size of each
+   allocation group to maximum of 2^16 number of blocks. Also it limits the size
+   on each block to 8KB
+   because start is 16 bit number, it can address 2^16 (64K) blocks in a block allocation
+   group, block allocation group size is decided by number of bits in each block (
+   bitmap block). With 8k block each bitmap block would have 64K bits, if we increase
+   block size beyond 8k then bitmap block can manage more than 64K and allocation size
+   can be bigger than 64K blocks, but then we can not access more than 64K blocks
+   in allocation group because of restirction on start field.
+
+   
+** filesize
+   12 direct block runs
+   1 indirect block run (minunum size of indirect block is 4KB)
+   1 double indierect block run (mininum size of dobule indirect block run is 4KB)
+  
+   Also the data blocks mapped by double indirect block is always 4K to avoid
+   disk fragmentation.
+
+   worst case file size with 1K block size
+   12 * 1K + (4K/sizeof(blockrun) = 8) * 1K + (4K/8 * (4K/8) * 4)
+   12K + 512 * 1K + 512 * 512 * 4K
+   12K + 512K +  1024MB
+
+   best case, each blockrun contains 65,536 blocks, and each indirect block can hold
+   512 (4K indirect block/ 8 (8 is size of each block run structure) block_runs structures.
+   12 * 65536K + 512 * 65536K + 512 * 512 * 4K
+
+   This is because double indirect and single indirect blocks are of 4K in size
+   and for double indirect block the data block size is 4K. This can be increase
+   in future (but it kept as it is for now)
+
+
+** SuperBlock
+   char name
+   magic
+   int32 block_size    
+   int32 block_shift   (set to log_2(block_size))
+   off_t num_blocks    (number of totla blocks available in system)
+   off_t used_blocks   (number of used blocks)
+   int32 inode_size    (size of the inode)
+   int32 blocks_per_ag (number of blocks in a allocation group)
+   int32 ag_shift
+   int32 num_ags
+   int32 flags
+   block_run log_blocks
+   off_t log_start
+   off_t log_end
+   inode_addr root_dir
+   inode_addr indices
+   
+** Inode
+   in32 magic
+   inode_addr inode_num
+   int32 uid
+   int32 gid
+   int32 mode
+   int32 flags
+   bigtime_t create_time
+   bigtime_T last_modified
+   inode_addr parent
+   inode_addr attributes
+   uint32 type
+   int32 inode_size
+   binode_etc *etc
+   data_stream data;
+   int32 pad[4]
+   int32 small_data[1]
+   
+** data_stream
+   Data stream is a field in inode which following structure
+   block_run direct[NUM_DIRECT_BLOCKS]
+   off_t     max_direct_range
+   block_run indirect;
+   off_t     max_indirect_range,
+   block_run double_indirect,
+   off_t     max_indirect_range
+
+** Attributes about the files
+Each file can have additional attributes specified for a file. A attribute are 
+stored in additional directory  whose inode is specified in inode structure. This
+directory is not visible in file listing, but the name contains the attribute key
+and data is stored in the file. To speed up the attribute lookup some attributes
+are also stored in the inode, as inode is a whole block, which gives it enough room
+to store additional values.
+

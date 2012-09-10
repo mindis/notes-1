@@ -1,0 +1,17 @@
+
+* To start a new Django project, issue the following command:
+$ django-admin.py startproject <project-name>
+
+* To create database tables, issue the following command:
+$ python manage.py syncdb
+
+* To start the development server, issue the following command:
+$ python manage.py runserver
+
+* start a new application.
+$ python manage.py startapp <app-name>
+
+* update database with to reflect any change to the model.
+$ python manage.py syncdb
+
+* To generate a Page not found (404) error, raise an exception of type Http404.

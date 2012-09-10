@@ -1,0 +1,53 @@
+* Research Topic
+
+* Distributed Hash Table
+http://www.linuxjournal.com/article/6797
+http://www.cs.rice.edu/Conferences/IPTPS02/107.pdf
+http://en.wikipedia.org/wiki/Distributed_hash_table
+http://en.wikipedia.org/wiki/Tapestry_(DHT)
+http://en.wikipedia.org/wiki/Pastry_(DHT)
+http://en.wikipedia.org/wiki/Chord_(peer-to-peer)
+http://usenix.org/events/osdi2000/full_papers/gribble/gribble_html/dds.html
+http://pdos.csail.mit.edu/papers/fdabek-phd-thesis.pdf
+
+* Programing languages
+** Rust
+** Functional programing language.
+*** Haskell
+
+    
+* Links to read
+http://www.kuro5hin.org/story/2002/11/14/22741/791
+http://www.rdrop.com/users/paulmck/scalability/paper/ordering.2007.09.19a.pdf
+http://www.systemswemake.com/
+http://tomasp.net/blog/async-sequences.aspx
+http://20bits.com/articles/graph-theory-part-iii-facebook/
+http://stackoverflow.com/questions/2298604/when-should-i-concern-myself-with-stdiostreamsentry/2298669#2298669
+http://stackoverflow.com/questions/4421706/operator-overloading
+http://www.dwavesys.com/en/dw_homepage.html
+http://www.dalnefre.com/wp/2011/11/fexpr-the-ultimate-lambda/
+http://www.elegantcoding.com/2011/11/eleven-equations-true-computer-science.html
+http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art008
+http://developer.amd.com/assets/NPT-WP-1 1-final-TM.pdf
+http://www.coranac.com/2009/07/sines/
+http://collison.ie/blog/2009/04/hacking-for-fun-and-profit-with-mathematica-and-the-google-analytics-api
+http://qooxdoo.org/ <== for web application development
+http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art008 
+http://mazonka.com/brainf/10.html
+http://compgeom.cs.uiuc.edu/~jeffe/teaching/algorithms/notes/01-recursion.pdf
+http://www.ats-lang.org/
+http://enmaku.wordpress.com/2011/12/10/rubber-ducking-elliptic-curve-cryptography/
+http://www.algomuse.appspot.com/
+http://www.linuxforu.com/2011/06/lisp-tears-of-joy-part-1/
+http://lwn.net/SubscriberLink/470681/55d01ed3e6033a3e/
+http://kmkeen.com/generators/
+http://www.wildbunny.co.uk/blog/2011/12/14/how-to-make-a-2d-platform-game-part-2-collision-detection/
+[[http://www.cs.cmu.edu/~scandal/cacm/cacm2.html][nested data parallel]]
+http://www.cse.unsw.edu.au/~chak/papers/CK00.html
+http://www.haskell.org/haskellwiki/GHC/Data_Parallel_Haskell
+http://www.scribd.com/doc/51979000/333/Common-log-File-System
+[[http://www.vldb.org/conf/1999/P1.pdf][Aries recovery algorithm]]
+http://blip.tv/clojure/clojure-concurrency-819147 [clojure]
+http://syprog.blogspot.com/2011/12/listing-loaded-shared-objects-in-linux.html
+http://www.acsu.buffalo.edu/~charngda/elf.html
+http://www.braintreepayments.com/devblog/switching-datacenters

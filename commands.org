@@ -1,0 +1,81 @@
+* To start a http server, servicing files in current directory.
+# python -m SimpleHTTPServer
+  to access the machine use port 8000.
+* Print "-" 50 times
+# python -c 'print "-"*50'
+
+* A quick calculator function
+# ? () { echo "$*" | bc -l; }
+# ? 10 + 10 
+20
+# ? 40 + 56
+96
+
+Also 'concalc' can be used instread of 'bc'
+
+* Replacing a string in large number of files using perl (inplace). 
+# perl -pi -w -e 's/search/replace/g;' *.c
+
+* Linux rpm tricks
+To extract rpm files 
+# rpm2cpio filename | cpio -i --make-directories
+
+To view files in the rpm 
+# rpm -qpl <file>
+
+To view information about installed package in linux 
+# rpm -qi <Package Name>
+
+Extracting scripts from rpm 
+# rpm -qp --scripts <file>
+
+* AIX package management.
+Extracting AIX pakcage in .bff format.
+# restore -x -f <.bff file>
+
+Installing Package on AIX
+# installp -acgX -d VRTSvxvm.bff VRTSvxvm
+
+* Increasing file system size on AIX
+# chfs -a size=+<len> <mount point>
+example : chfs -a size=+131072 /home
+
+* Scanning disks on HP-UX
+# insf -e
+# ioscan -fnC disk
+
+* SSH key exchange
+** Generate ssh key using ssh-keygen
+# ssh-keygen
+
+This will generate key in ~/.ssh directory.
+
+** passwordless login
+copy the key on machine on which you want password less login
+# cat ~/.ssh/id_rsa.pub | ssh user@dest cat - ">>" ~/.ssh/authorized_keys
+
+make sure to change permission of ~/.ssh/authorized_keys file to only 
+read/write only to the user.
+# chmod 0600 ~/.ssh/authorized_keys
+
+The latest method is to use ssh-copy-id programs.
+# ssh-copyid -i ~/.ssh/id_rsa.pub user@host
+
+* GCC trics
+gcc -### - show what GCC would have executed
+gcc -v - show what GCC is executing
+gcc -g x.c -o x; objdump -S x - show the C and generated assembly code
+gcc -E -dM - </dev/null - show all predefined GCC macros
+gcc -C -E - show pre-processor output, but leave comments intact
+gcc -M - show all include file dependencies (for use in Makefiles)
+gcc -MM - like above, but ignore system include files
+
+* Killing all procces 
+On Linux killall <process name> can be used to kill all instance of a 
+process.
+
+On other platforms, we can use
+#+begin_src
+$ ps -ef | grep <process name> | grep -v grep | awk '{ print $2 }' | xargs kill -9
+#+end_src
+
